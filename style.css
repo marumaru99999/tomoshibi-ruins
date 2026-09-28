@@ -6,3 +6,37 @@
 .menu-link{display:block;width:100%;border:1px solid var(--line);border-radius:9px;background:#f9f8f2;text-align:center;padding:12px;font-weight:700;min-height:49px;color:var(--ink);text-decoration:none}
 [hidden]{display:none!important}
 @media(max-width:560px){main{padding:14px 12px calc(36px + env(safe-area-inset-bottom))}.panel{padding:17px;border-radius:15px}.hero{padding:31px 10px 26px}.hero h1{font-size:2.35rem}.creator{grid-template-columns:1fr 1fr;gap:10px}.creator label:first-of-type{grid-column:1 / -1}.party-grid{gap:7px}.member{padding:10px}.member-head small{font-size:.62rem}.hp-row{font-size:.64rem}.story-text{font-size:.96rem}}
+
+/* 場面ごとの軽量なベクター風景。通信がないときも背景を表示する。 */
+.scene-art{position:relative;height:210px;margin:-22px -22px 22px;overflow:hidden;border-radius:17px 17px 0 0;background-color:#1a3036;background-size:cover;background-position:center}
+.scene-art-shade{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:25px 29px;background:linear-gradient(90deg,rgba(10,27,35,.78),rgba(10,27,35,.15) 80%),linear-gradient(0deg,rgba(10,27,35,.5),transparent 65%)}
+.scene-art-shade span{color:#e7c786;font-size:.74rem;font-weight:800;letter-spacing:.18em;margin-bottom:6px}
+.scene-art h1{color:#fff;margin:0;text-shadow:0 2px 12px #09171dcc}
+.scene-village,.scene-victory{background-image:url('./scene-village.svg')}
+.scene-archive{background-image:url('./scene-archive.svg')}
+.scene-road,.scene-return{background-image:url('./scene-road.svg')}
+.scene-grove{background-image:url('./scene-grove.svg')}
+.scene-gate,.scene-combat,.scene-defeat{background-image:url('./scene-gate.svg')}
+.scene-vault,.scene-escape{background-image:url('./scene-vault.svg')}
+.scene-victory{filter:saturate(1.25) brightness(1.12)}
+.scene-defeat{filter:saturate(.55) brightness(.7)}
+.scene-escape{filter:saturate(.8) brightness(.8)}
+.clue-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;color:#53675e;font-size:.78rem;line-height:1.5}
+.clue-list strong{color:#325f50}
+.dice-board{grid-column:1}
+.dice-current{display:flex;align-items:center;gap:17px}
+.die-face{flex:none;display:grid;place-items:center;width:82px;height:82px;color:#f9efd4;background:#23535a;border:2px solid #e4be74;clip-path:polygon(50% 0,90% 20%,100% 65%,50% 100%,0 65%,10% 20%);font-family:"Hiragino Mincho ProN","Yu Mincho",serif;font-size:2rem;font-weight:800;filter:drop-shadow(0 5px 9px #142f3855);animation:die-appear .45s ease-out}
+.dice-summary{display:grid;gap:5px;font-size:.85rem;line-height:1.55}
+.dice-summary>span{color:var(--muted)}
+.dice-summary b{color:var(--ink)}
+.dice-summary .success{color:#247752}
+.dice-summary .failure{color:#a34a3d}
+.dice-trail{display:flex;gap:7px;overflow:auto;margin-top:17px;padding-bottom:4px}
+.die-chip{display:grid;grid-template-columns:auto auto;align-items:baseline;gap:0 5px;min-width:86px;padding:7px 9px;background:#eef4ef;border:1px solid #c5d5c7;border-radius:8px;white-space:nowrap}
+.die-chip b{font-size:.65rem;color:#63816c}
+.die-chip strong{font-size:1rem}
+.die-chip small{grid-column:1/-1;max-width:140px;overflow:hidden;text-overflow:ellipsis;color:#66746d;font-size:.57rem}
+@keyframes die-appear{from{transform:rotate(-35deg) scale(.65);opacity:.2}to{transform:rotate(0) scale(1);opacity:1}}
+@media(prefers-reduced-motion:reduce){.die-face{animation:none}}
+@media(max-width:800px){.dice-board{grid-column:1;grid-row:auto;order:1}.party{order:2}.enemies{order:3}.actions{order:4}.journal{order:5}}
+@media(max-width:560px){.scene-art{height:170px;margin:-17px -17px 17px;border-radius:14px 14px 0 0}.scene-art-shade{padding:19px}.scene-art h1{font-size:2rem}.die-face{width:67px;height:67px;font-size:1.55rem}.dice-current{gap:11px}.dice-summary{font-size:.72rem}}

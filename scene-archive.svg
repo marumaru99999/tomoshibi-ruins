@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 380">
+  <defs><linearGradient id="room" x2="0" y2="1"><stop stop-color="#263945"/><stop offset="1" stop-color="#76543d"/></linearGradient><linearGradient id="beam"><stop stop-color="#f6d995" stop-opacity=".4"/><stop offset="1" stop-color="#f6d995" stop-opacity="0"/></linearGradient></defs>
+  <rect width="1200" height="380" fill="url(#room)"/><path d="M0 60h1200M0 145h1200M0 230h1200" stroke="#192c36" stroke-width="18"/>
+  <g fill="#1b3039"><path d="M505 0h55v320h-55zM745 0h55v320h-55zM1010 0h55v320h-55z"/></g>
+  <g fill="#bf8e5f" opacity=".78"><path d="M585 78h17v58h-17zM612 66h24v70h-24zM649 84h17v52h-17zM680 57h31v79h-31zM824 88h21v49h-21zM856 65h28v72h-28zM900 77h17v60h-17zM926 57h27v80h-27zM1085 70h19v68h-19zM1110 84h24v54h-24z"/></g>
+  <path d="M300 0h120l300 360H510z" fill="url(#beam)"/><path d="M75 312h440l-50 68H18z" fill="#6a4b36"/><path d="M116 300l183-45 181 45-180 53z" fill="#d0ad74"/><path d="M142 301l160-37 153 37-153 43z" fill="#ead4a4" opacity=".8"/>
+  <circle cx="339" cy="40" r="21" fill="#f4d596" opacity=".75"/><path d="M339 0v36" stroke="#d5aa66" stroke-width="5"/>
+</svg>

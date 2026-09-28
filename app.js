@@ -1,5 +1,5 @@
-import {RACES,CLASSES,BACKGROUNDS,SPELLS} from './content.js?v=5';
-import {createGame,DEFAULT_PARTY,validateGame,viewGame,perform} from './adventure.js?v=5';
+import {RACES,CLASSES,BACKGROUNDS,SPELLS} from './content.js?v=6';
+import {createGame,DEFAULT_PARTY,validateGame,viewGame,perform} from './adventure.js?v=6';
 
 const SAVE_KEY='tomoshibi-ruins-save-v1';
 const app=document.querySelector('#app');
@@ -38,10 +38,10 @@ function setupScreen(){
   const classes=Object.entries(CLASSES).map(([id,value])=>`<option value="${escapeHTML(id)}">${label(value,id)}</option>`).join('');
   const backgrounds=Object.entries(BACKGROUNDS).map(([id,value])=>`<option value="${escapeHTML(id)}">${label(value,id)}</option>`).join('');
   app.innerHTML=`<section class="hero"><div class="eyebrow">オフラインで遊べる短編RPG</div><h1>灯火の遺跡</h1><p>四人の冒険者を導き、消えた灯台の火を取り戻そう。選んだ種族と職業が判定や戦いに影響する。セーブはこの端末に自動で残る。</p></section>
-    <section class="panel setup"><div class="section-title"><span>01</span><h2>四人の冒険者を作る</h2></div><p class="muted">最初はおすすめの組み合わせが入っています。名前・種族・職業は自由に変更できます。</p>
+    <section class="panel setup"><div class="section-title"><span>01</span><h2>四人の冒険者を作る</h2></div><p class="muted">おすすめ編成は、攻撃役の人間ファイター、探索役のハーフリング・ローグ、判断力と耐久力を高めたドワーフ・クレリック、封印を調べるエルフ・ウィザードです。名前・種族・職業は自由に変更できます。</p>
     <form id="setup-form">${DEFAULT_PARTY.map((person,i)=>`<fieldset class="creator"><legend>冒険者 ${i+1}</legend><label>名前<input name="name${i}" maxlength="20" required value="${escapeHTML(person.name)}"></label><label>種族<select name="race${i}">${races}</select></label><label>職業<select name="class${i}">${classes}</select></label><label>背景<select name="background${i}">${backgrounds}</select></label></fieldset>`).join('')}
     <button class="primary full" type="submit">冒険を始める <span aria-hidden="true">→</span></button></form></section>
-    <section class="panel note"><h2>遊び方</h2><p>場面ごとに行動を選ぶだけで進みます。攻撃や判定の出目は記録に残ります。交渉でも戦闘でも、灯石を持ち帰ればクリアです。</p></section>`;
+    <section class="panel note"><h2>遊び方</h2><p>村で手掛かりを集め、森や門で進路を選び、鐘楼の封印を解いて灯石を持ち帰ります。判定の出目は画面と記録に残り、選択によって結末の報酬が変わります。</p></section>`;
   DEFAULT_PARTY.forEach((person,i)=>{
     app.querySelector(`[name="race${i}"]`).value=person.raceId;
     app.querySelector(`[name="class${i}"]`).value=person.classId;
@@ -67,6 +67,15 @@ function partyCard(person,index,turn){
     <details class="member-details"><summary>能力と特性</summary><div>筋${person.abilities?.str} 敏${person.abilities?.dex} 耐${person.abilities?.con} 知${person.abilities?.int} 判${person.abilities?.wis} 魅${person.abilities?.cha}</div><div>${(person.traits||[]).map(id=>TRAIT_NAMES[id]).filter(Boolean).map(escapeHTML).join(' · ')}</div></details></div>`;
 }
 function selectOptions(entries){return entries.map(({value,text})=>`<option value="${escapeHTML(value)}">${escapeHTML(text)}</option>`).join('');}
+function dicePanel(view){
+  const latest=view.lastCheck, rolls=view.diceHistory||[];
+  const face=latest?.roll??rolls.at(-1)?.face??'—';
+  const summary=latest
+    ?`<div class="dice-summary"><strong>${escapeHTML(latest.label)}</strong><span>出目 ${escapeHTML(latest.rolls.join('・'))} → 採用 ${latest.roll}、補正 ${latest.bonus>=0?'+':''}${latest.bonus} ＝ <b>${latest.total}</b>${latest.target===null?'':` ／ 難易度・防御 ${latest.target}`}　<strong class="${latest.success?'success':'failure'}">${latest.success?'成功':'失敗'}</strong></span></div>`
+    :'<p class="muted">判定や戦闘で振ったサイコロがここに表示されます。</p>';
+  return `<section class="dice-board panel" aria-label="サイコロの出目"><div class="section-title"><span>⚄</span><h2>サイコロの出目</h2></div><div class="dice-current"><div class="die-face" aria-label="直近の出目 ${face}">${face}</div>${summary}</div>
+    ${rolls.length?`<div class="dice-trail" aria-label="最近のサイコロ">${rolls.slice(-8).reverse().map(item=>`<div class="die-chip" title="${escapeHTML(item.context)}"><b>d${item.sides}</b><strong>${item.face}</strong><small>${escapeHTML(item.context)}</small></div>`).join('')}</div>`:''}</section>`;
+}
 const TRAIT_NAMES={dwarven_resilience:'毒に強い',dwarven_toughness:'最大HPが増える',dwarven_armor_speed:'重装鎧でも速度を保つ',stonecunning:'石造物の知識',keen_senses:'知覚に習熟',fey_ancestry:'魅了に強く、魔法では眠らない',trance:'トランス',high_elf_cantrip:'追加の初級呪文',lucky:'d20の1を振り直す',brave:'恐怖に強い',halfling_nimbleness:'大きい相手の場所を通過',naturally_stealthy:'大きい者に隠れやすい',extra_language:'追加言語',second_wind:'セカンド・ウィンド',sneak_attack:'急所攻撃',disciple_of_life:'回復呪文を強める',arcane_recovery:'秘術回復'};
 function spellList(person){
   const playable=new Set(['fire_bolt','sacred_flame','magic_missile','guiding_bolt','burning_hands','thunderwave','cure_wounds','healing_word','spare_the_dying','bless','shield_of_faith','mage_armor','command']);
@@ -93,9 +102,12 @@ function menuHTML(){return `<div class="modal-backdrop" id="modal-backdrop"><sec
   <small>収録範囲：レベル1、四種族・四職業、短編冒険1本。ローカル保存。外部AIへの送信なし。</small></section></div>`;}
 function gameScreen(){
   const view=viewGame(game);
-  app.innerHTML=`<div class="game-layout"><section class="story panel"><div class="eyebrow">${view.scene==='combat'?`第${view.round}ラウンド`:'冒険'}</div><h1>${escapeHTML(view.title)}</h1><p class="story-text">${escapeHTML(view.description)}</p><div class="map">${escapeHTML(view.map)}</div>
+  const sceneArt=['archive','road','grove','gate','combat','vault','escape','return','victory','defeat'].includes(view.scene)?view.scene:'village';
+  app.innerHTML=`<div class="game-layout"><section class="story panel"><div class="scene-art scene-${sceneArt}"><div class="scene-art-shade"><span>${view.scene==='combat'?`第${view.round}ラウンド`:'冒険'}</span><h1>${escapeHTML(view.title)}</h1></div></div><p class="story-text">${escapeHTML(view.description)}</p><div class="map">${escapeHTML(view.map)}</div>
     ${view.scene==='victory'?'<div class="quest done">✦ 灯台の火を戻した。冒険達成！</div>':view.flags.stone?'<div class="quest done">✦ 灯石を入手。村へ届けよう</div>':'<div class="quest">目標：灯石を見つけ、灯台へ持ち帰る</div>'}
+    <div class="clue-list"><strong>集めた手掛かり</strong><span>${[view.flags.heardElder?'村長の話':null,view.flags.archiveClue?'古文書の順序':null,view.flags.scouted?'門の巡回路':null,view.flags.spiritFavor?'火の精の祝福':null,view.flags.emberTaken?'持ち去った残り火':null,view.flags.sealClue?'祭壇の印':null].filter(Boolean).map(escapeHTML).join(' · ')||'まだない'}</span></div>
     <div class="latest"><span>${view.reactionTarget?`${escapeHTML(view.reactionTarget)}の反応を選択`:'直前の出来事'}</span><p>${escapeHTML(view.lastMessage)}</p></div></section>
+    ${dicePanel(view)}
     <section class="party panel"><div class="section-title"><span>✦</span><h2>冒険者</h2></div><div class="party-grid">${view.party.map((person,index)=>partyCard(person,index,view.turn)).join('')}</div><div class="supplies">回復薬 ${view.supplies.potions}個 · 松明 ${view.supplies.torches}本${view.torchLit?'（点灯中）':''} · 経過 ${Math.floor(view.time/60)}時間${view.time%60}分</div></section>
     ${view.scene==='combat'?`<section class="enemies panel"><div class="section-title"><span>⚔</span><h2>相手</h2></div><div class="enemy-list">${view.enemies.map(enemy=>`<div class="enemy ${enemy.hp<=0?'fallen':''}"><strong>${escapeHTML(enemy.name)}</strong><span>HP ${enemy.hp}/${enemy.maxHp} · AC ${enemy.ac}</span></div>`).join('')}</div></section>`:''}
     <section class="actions panel"><div class="section-title"><span>→</span><h2>どうする？</h2></div>${view.actions.length?view.actions.map(option=>`<form class="action-form" data-type="${escapeHTML(option.type)}">${actionExtra(option,view)}<button type="submit" class="action-button" ${option.type==='spell'&&!spellList(view.party[view.turn]||{}).length?'disabled':''}><span>${escapeHTML(option.label)}</span><b aria-hidden="true">↗</b></button></form>`).join(''):`<p>${view.scene==='victory'?'冒険達成！ 設定から新しい冒険を始められます。':'冒険は終了しました。設定から新しい冒険を始められます。'}</p>`}</section>

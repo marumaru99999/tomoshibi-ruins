@@ -1,7 +1,8 @@
-const CACHE = 'tomoshibi-v5';
+const CACHE = 'tomoshibi-v6';
 const ASSETS = [
-  './', './index.html', './index.html?build=5', './style.css?v=5', './app.js?v=5', './adventure.js?v=5',
-  './rules.js?v=5', './content.js?v=5', './manifest.webmanifest?v=5', './icon.svg', './icon-180.png', './credits.html'
+  './', './index.html', './index.html?build=6', './style.css?v=6', './app.js?v=6', './adventure.js?v=6',
+  './rules.js?v=6', './content.js?v=6', './manifest.webmanifest?v=6', './icon.svg', './icon-180.png', './credits.html',
+  './scene-village.svg', './scene-archive.svg', './scene-road.svg', './scene-grove.svg', './scene-gate.svg', './scene-vault.svg'
 ];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));

@@ -2,7 +2,7 @@
   "name": "灯火の遺跡 — 四人で挑む短編RPG",
   "short_name": "灯火の遺跡",
   "description": "オフラインで遊べる日本語の選択式ファンタジーRPG",
-  "start_url": "./index.html?build=5",
+  "start_url": "./index.html?build=6",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f3efe5",

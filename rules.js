@@ -1,11 +1,11 @@
 // 数値と資源の確定処理。入力を変更せず、保存可能な通常のオブジェクトを返す。
-import {ABILITIES, STANDARD_ARRAY, RACES, CLASSES, BACKGROUNDS, SKILL_ABILITIES, WEAPONS, SPELLS} from './content.js?v=5';
+import {ABILITIES, STANDARD_ARRAY, RACES, CLASSES, BACKGROUNDS, SKILL_ABILITIES, WEAPONS, SPELLS} from './content.js?v=6';
 
 const copy = value => structuredClone(value);
 const has = (actor, trait) => (actor.traits || []).includes(trait);
-const random = rng => (typeof rng === 'function' ? rng : Math.random)();
+const random = (rng,sides) => typeof rng === 'function' ? rng(sides) : Math.random();
 export function die(sides, rng) {
-  const value = random(rng);
+  const value = random(rng,sides);
   if (!Number.isFinite(value) || value < 0 || value >= 1) throw new RangeError('乱数は0以上1未満');
   return Math.floor(value * sides) + 1;
 }
